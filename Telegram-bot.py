@@ -7,7 +7,7 @@ from secrets import TOKEN
 # Инициализация бота
 bot = telebot.TeleBot(TOKEN)
 
-# Обработчик команды /start
+# Обработчик команды
 @bot.message_handler(commands=['start'])
 def start_message(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
