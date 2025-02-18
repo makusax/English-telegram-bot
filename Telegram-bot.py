@@ -2,12 +2,23 @@ import telebot
 from telebot import types
 import random
 from compliment import compliments
-from secrets import TOKEN
+from dotenv import load_dotenv  # Импортируем load_dotenv
+import os
 
-# Инициализация
+# Загружаем переменные из .env файла
+load_dotenv()
+
+# Получаем токен из переменной окружения
+TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+# Проверка токена
+if not TOKEN:
+    raise ValueError("Токен не найден. Проверьте .env файл.")
+
+# Инициализация бота
 bot = telebot.TeleBot(TOKEN)
 
-# Обработчик
+# Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def start_message(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
