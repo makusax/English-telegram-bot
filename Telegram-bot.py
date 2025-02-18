@@ -4,7 +4,7 @@ import random
 from compliment import compliments
 from secrets import TOKEN
 
-# Инициализация бота
+# Инициализация
 bot = telebot.TeleBot(TOKEN)
 
 # Обработчик
