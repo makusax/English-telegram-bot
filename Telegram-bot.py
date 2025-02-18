@@ -22,8 +22,14 @@ questions = [
     {"sentence": "They ___ football right now.", "answer": "are playing"},
     {"sentence": "He ___ his homework yesterday.", "answer": "did"},
     {"sentence": "I ___ call you tomorrow.", "answer": "will"},
-    {"sentence": "We ___ already finished the project.", "answer": "have"}
+    {"sentence": "We ___ already finished the project.", "answer": "have"},
+    {"sentence": "She is ___ best student in the class.", "answer": "the"},
+    {"sentence": "The book is ___ the table.", "answer": "on"},
+    {"sentence": "This is the ___ movie I have ever seen.", "answer": "best"},
+    {"sentence": "You ___ wear a helmet while riding a bike.", "answer": "must"},
+    {"sentence": "There are three ___ in the room.", "answer": "chairs"}
 ]
+
 
 # Словарь для хранения состояния пользователей
 user_data = {}
@@ -33,7 +39,7 @@ def determine_level(correct_answers, total_questions):
     percentage = (correct_answers / total_questions) * 100
 
     if percentage >= 80:
-        return "B1-B2"
+        return "B1-B2-С1"
     elif percentage >= 60:
         return "A2"
     elif percentage >= 40:
