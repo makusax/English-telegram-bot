@@ -32,13 +32,13 @@ user_data = {}
 def determine_level(correct_answers, total_questions):
     percentage = (correct_answers / total_questions) * 100
 
-    if percentage >= 80:  # 4/5 или 5/5
+    if percentage >= 80:
         return "B1-B2"
-    elif percentage >= 60:  # 3/5
+    elif percentage >= 60:
         return "A2"
-    elif percentage >= 40:  # 2/5
+    elif percentage >= 40:
         return "A1"
-    else:  # 1/5 или 0/5
+    else:
         return "A0"
 
 # Обработчик команды /start
