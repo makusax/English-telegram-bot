@@ -2,7 +2,7 @@ import telebot
 from telebot import types
 import random
 from compliment import compliments
-from dotenv import load_dotenv  # Импортируем load_dotenv
+from dotenv import load_dotenv
 import os
 
 # Загружаем переменные из .env файла
