@@ -37,5 +37,13 @@ def buttons(message):
     else:
         bot.send_message(message.chat.id, text="Я могу отвечать только на нажатие кнопок!")
 
+    if message.text == "Определение уровня💯":
+        # Показываем кнопки для начала теста
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        start_test_button = types.KeyboardButton("Получить 5 новых слов🙋")
+        back_button = types.KeyboardButton("Вернуться назад🆘")
+        markup.add(start_test_button, back_button)
+        bot.send_message(message.chat.id, "Вот 5 новых слов! Удачи!", reply_markup=markup)
+
 # Запуск бота
 bot.polling(none_stop=True, interval=0)
