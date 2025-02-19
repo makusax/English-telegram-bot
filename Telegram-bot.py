@@ -18,6 +18,8 @@ if not TOKEN:
 # Инициализация бота
 bot = telebot.TeleBot(TOKEN)
 
+words = [{}]
+
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -37,7 +39,7 @@ def buttons(message):
     else:
         bot.send_message(message.chat.id, text="Я могу отвечать только на нажатие кнопок!")
 
-    if message.text == "Определение уровня💯":
+    if message.text == "Новые слова📗":
         # Показываем кнопки для начала теста
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         start_test_button = types.KeyboardButton("Получить 5 новых слов🙋")
