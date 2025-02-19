@@ -18,18 +18,6 @@ if not TOKEN:
 # Инициализация бота
 bot = telebot.TeleBot(TOKEN)
 
-words = [
-    {"word": "apple", "translation": "яблоко", "transcription": "[ˈæpəl]"},
-    {"word": "book", "translation": "книга", "transcription": "[bʊk]"},
-    {"word": "cat", "translation": "кот", "transcription": "[kæt]"},
-    {"word": "dog", "translation": "собака", "transcription": "[dɒɡ]"},
-    {"word": "elephant", "translation": "слон", "transcription": "[ˈɛlɪfənt]"},
-    {"word": "flower", "translation": "цветок", "transcription": "[ˈflaʊər]"},
-    {"word": "guitar", "translation": "гитара", "transcription": "[ɡɪˈtɑːr]"},
-    {"word": "house", "translation": "дом", "transcription": "[haʊs]"},
-    {"word": "island", "translation": "остров", "transcription": "[ˈaɪlənd]"},
-    {"word": "jungle", "translation": "джунгли", "transcription": "[ˈdʒʌŋɡəl]"}
-]
 
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
@@ -47,8 +35,6 @@ def buttons(message):
         bot.send_message(message.chat.id, text="Хорошо, выбери из списка интересующий тебя пункт! \n1.Определение уровня💯 \n2.Новые слова📗 \n3.Правила💬")
     elif message.text == "Комплимент⛰️":
         bot.send_message(message.chat.id, text=f"{random.choice(compliments)}")
-    else:
-        bot.send_message(message.chat.id, text="Я могу отвечать только на нажатие кнопок!")
 
     if message.text == "Новые слова📗":
         # Показываем кнопки для начала теста
@@ -58,18 +44,5 @@ def buttons(message):
         markup.add(start_test_button, back_button)
         bot.send_message(message.chat.id, "Вот 5 новых слов! Удачи!", reply_markup=markup)
 
-
-    def get_random_words(word_list, num_words=5):
-        return random.sample(word_list, num_words)
-
-
-
-    random_words = get_random_words(words)
-    print("Вот 5 новых слов для изучения!:")
-    for word in random_words:
-        print(f"Слово: {word['word']}")
-        print(f"Перевод: {word['translation']}")
-        print(f"Транскрипция: {word['transcription']}")
-        print()
 # Запуск бота
 bot.polling(none_stop=True, interval=0)
