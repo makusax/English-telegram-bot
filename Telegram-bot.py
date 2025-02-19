@@ -31,6 +31,18 @@ words = [
     {"word": "jungle", "translation": "джунгли", "transcription": "[ˈdʒʌŋɡəl]"}
 ]
 
+# Список для хранения использованных слов
+used_words = []
+
+# Функция для получения 5 случайных слов
+def get_random_words(word_list, num_words=5):
+    available_words = [word for word in word_list if word not in used_words]
+    if len(available_words) < num_words:
+        return None
+    selected_words = random.sample(available_words, num_words)
+    used_words.extend(selected_words)
+    return selected_words
+
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -47,29 +59,24 @@ def buttons(message):
         bot.send_message(message.chat.id, text="Хорошо, выбери из списка интересующий тебя пункт! \n1.Определение уровня💯 \n2.Новые слова📗 \n3.Правила💬")
     elif message.text == "Комплимент⛰️":
         bot.send_message(message.chat.id, text=f"{random.choice(compliments)}")
-    else:
-        bot.send_message(message.chat.id, text="Я могу отвечать только на нажатие кнопок!")
-
-    if message.text == "Новые слова📗":
+    elif message.text == "Новые слова📗":
         # Показываем кнопки для начала теста
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         start_test_button = types.KeyboardButton("Получить 5 новых слов🙋")
         back_button = types.KeyboardButton("Вернуться назад🆘")
         markup.add(start_test_button, back_button)
-        bot.send_message(message.chat.id, "Вот 5 новых слов! Удачи!", reply_markup=markup)
+        bot.send_message(message.chat.id, "Нажми на кнопку, чтобы получить 5 новых слов!", reply_markup=markup)
+    elif message.text == "Получить 5 новых слов🙋":
+        random_words = get_random_words(words)
+        if random_words:
+            response = "Вот 5 новых слов для изучения:\n\n"
+            for word in random_words:
+                response += f"Слово: {word['word']}\nПеревод: {word['translation']}\nТранскрипция: {word['transcription']}\n\n"
+            bot.send_message(message.chat.id, response)
+        else:
+            bot.send_message(message.chat.id, "Слова закончились! Ждите обновления словаря!")
+    else:
+        bot.send_message(message.chat.id, text="Я могу отвечать только на нажатие кнопок!")
 
-
-    def get_random_words(word_list, num_words=5):
-        return random.sample(word_list, num_words)
-
-
-
-    random_words = get_random_words(words)
-    print("Вот 5 новых слов для изучения!:")
-    for word in random_words:
-        print(f"Слово: {word['word']}")
-        print(f"Перевод: {word['translation']}")
-        print(f"Транскрипция: {word['transcription']}")
-        print()
 # Запуск бота
 bot.polling(none_stop=True, interval=0)
