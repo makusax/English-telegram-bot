@@ -30,9 +30,15 @@ words = [
     {"word": "jungle", "translation": "джунгли", "transcription": "[ˈdʒʌŋɡəl]"}
 ]
 
+# Список правил
+rules = [
+    "1. Present Simple — это время, используемое для описания регулярных действий, фактов и состояний.",
+    "2. Past Simple — это время, используемое для описания действий, которые произошли в прошлом.",
+    "3. Future Simple — это время, используемое для описания действий, которые произойдут в будущем."
+]
+
 # Словарь для хранения состояния пользователей
 user_data = {}
-
 
 # Функция для определения уровня
 def determine_level(correct_answers, total_questions):
@@ -47,7 +53,6 @@ def determine_level(correct_answers, total_questions):
     else:
         return "A0"
 
-
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def start_message(message):
@@ -57,7 +62,6 @@ def start_message(message):
     markup.add(start_button, action_button)
     bot.send_message(message.chat.id, f"Привет✌️, {message.from_user.first_name} \nВоспользуйся кнопками!",
                      reply_markup=markup)
-
 
 # Обработчик текстовых сообщений
 @bot.message_handler(content_types=["text"])
@@ -81,6 +85,28 @@ def buttons(message):
             "Ты вдохновляешь!"
         ]
         bot.send_message(message.chat.id, text=f"{random.choice(compliments)}")
+
+    elif message.text == "Правила💬":
+        markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        gives_rules_button = types.KeyboardButton("Получить правила🙋")
+        back_button = types.KeyboardButton("Вернуться назад🆘")
+        markup.add(gives_rules_button, back_button)
+        bot.send_message(message.chat.id, "Давай же начнем изучения правил английского языка!", reply_markup=markup)
+
+    elif message.text == "Получить правила🙋":
+        user_data[message.chat.id] = {"mode": "choosing_rule"}  # Устанавливаем режим выбора правила
+        rules_list = "Выберите правило, которое хотите изучить, введя его номер:\n"
+        for i, rule in enumerate(rules, start=1):
+            rules_list += f"{i}. {rule}\n"
+        bot.send_message(message.chat.id, rules_list)
+
+    elif message.text.strip().isdigit() and message.chat.id in user_data and user_data[message.chat.id].get("mode") == "choosing_rule":
+        rule_number = int(message.text)
+        if 1 <= rule_number <= len(rules):
+            bot.send_message(message.chat.id, rules[rule_number - 1])
+            del user_data[message.chat.id]  # Сбрасываем режим после выбора правила
+        else:
+            bot.send_message(message.chat.id, "Правило с таким номером не найдено. Попробуйте ещё раз.")
 
     elif message.text == "Определение уровня💯":
         # Запрашиваем количество правильных ответов
@@ -116,11 +142,11 @@ def buttons(message):
         # Инициализация состояния пользователя для новых слов
         if message.chat.id not in user_data:
             user_data[message.chat.id] = {
-                "learned_words": []
+                "learned_words": []  # Инициализируем пустой список изученных слов
             }
 
         # Получаем слова, которые еще не изучены
-        learned_words = user_data[message.chat.id]["learned_words"]
+        learned_words = user_data[message.chat.id].get("learned_words", [])  # Используем .get() для безопасности
         available_words = [word for word in words if word not in learned_words]
 
         if len(available_words) == 0:
@@ -129,7 +155,7 @@ def buttons(message):
 
         # Получаем 5 случайных слов
         new_words = random.sample(available_words, min(5, len(available_words)))
-        user_data[message.chat.id]["learned_words"].extend(new_words)
+        user_data[message.chat.id]["learned_words"].extend(new_words)  # Добавляем новые слова в изученные
 
         # Отправляем новые слова
         response = "Вот ваши новые слова:\n"
@@ -183,7 +209,6 @@ def buttons(message):
         else:
             # Обработка неизвестных команд
             bot.send_message(message.chat.id, "Я могу отвечать только на нажатие кнопок!")
-
 
 # Запуск бота
 bot.polling(none_stop=True, interval=0)
