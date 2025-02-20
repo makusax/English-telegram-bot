@@ -146,8 +146,43 @@ def buttons(message):
         bot.send_message(message.chat.id, "Возвращаемся в главное меню!", reply_markup=markup)
 
     else:
-        # Обработка неизвестных команд
-        bot.send_message(message.chat.id, "Я могу отвечать только на нажатие кнопок!")
+        # Обработка ответов на вопросы теста
+        if message.chat.id in user_data and "questions" in user_data[message.chat.id]:
+            current_question = user_data[message.chat.id]["current_question"]
+            questions = user_data[message.chat.id]["questions"]
+            correct_answer = questions[current_question]["answer"]
+
+            if message.text.strip().lower() == correct_answer.lower():
+                user_data[message.chat.id]["correct_answers"] += 1
+                bot.send_message(message.chat.id, "Правильно! 👍")
+            else:
+                bot.send_message(message.chat.id, f"Неправильно. Правильный ответ: {correct_answer}")
+
+            # Переход к следующему вопросу
+            user_data[message.chat.id]["current_question"] += 1
+
+            if user_data[message.chat.id]["current_question"] < len(questions):
+                next_question = questions[user_data[message.chat.id]["current_question"]]
+                bot.send_message(message.chat.id, next_question["sentence"])
+            else:
+                # Завершение теста и определение уровня
+                correct_answers = user_data[message.chat.id]["correct_answers"]
+                total_questions = len(questions)
+                level = determine_level(correct_answers, total_questions)
+                bot.send_message(message.chat.id, f"Тест завершен! Ваш уровень: {level}")
+
+                # Возвращаемся к главному меню
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                start_button = types.KeyboardButton("🚀Старт")
+                action_button = types.KeyboardButton("Комплимент⛰️")
+                markup.add(start_button, action_button)
+                bot.send_message(message.chat.id, "Возвращаемся в главное меню!", reply_markup=markup)
+
+                # Очищаем состояние пользователя
+                del user_data[message.chat.id]
+        else:
+            # Обработка неизвестных команд
+            bot.send_message(message.chat.id, "Я могу отвечать только на нажатие кнопок!")
 
 
 # Запуск бота
